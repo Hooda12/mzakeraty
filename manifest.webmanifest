@@ -1,0 +1,11 @@
+{
+  "name":"مذاكرتي | Mzakeraty",
+  "short_name":"مذاكرتي",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#f7f8fc",
+  "theme_color":"#6c4cff",
+  "dir":"auto",
+  "lang":"ar",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

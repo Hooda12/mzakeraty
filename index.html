@@ -103,6 +103,7 @@ h1.t{font-size:22px;margin:4px 0 14px;color:var(--nv)}
 .opt.ok{background:linear-gradient(135deg,var(--ok),#5fdca9);color:#fff;border-color:transparent;animation:pop2 .4s}
 .opt.no{background:linear-gradient(135deg,var(--dg),#ff8fa0);color:#fff;border-color:transparent;animation:shake .4s}
 .cf{position:fixed;left:50%;top:38%;width:10px;height:10px;border-radius:3px;animation:pop .95s ease-out forwards;pointer-events:none;z-index:30}
+.credit{text-align:center;color:var(--mu);font-size:13px;padding:6px 16px calc(26px + env(safe-area-inset-bottom))}.credit b{background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800;letter-spacing:.3px}.credit span{color:var(--dg);display:inline-block;animation:beat 2.2s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -167,7 +168,7 @@ function shell(inner){
   const r=location.hash.replace('#/','').split('/')[0];
   const t=r==='cards'?'cards':r==='quiz'?'quiz':'home';
   const nv=(k,h,l)=>`<a class="${t===k?'on':''}" data-a="open" data-h="${h}">${l}</a>`;
-  $('#app').innerHTML=`<div class="top"><div><span class="brand" data-a="home">${logo(34)}<span>مذاكرتي</span></span><span class="badge">${e(prof?.display_name||'')}${isAdmin()?' · مشرف':''}</span><button class="g" data-a="out">خروج</button></div></div><div class="nav"><div>${nv('home','','📚 المواد')}${nv('cards','cards','🗂 البطاقات')}${nv('quiz','quiz','✅ الاختبار')}</div></div><div class="wrap">${inner}</div>`;
+  $('#app').innerHTML=`<div class="top"><div><span class="brand" data-a="home">${logo(34)}<span>مذاكرتي</span></span><span class="badge">${e(prof?.display_name||'')}${isAdmin()?' · مشرف':''}</span><button class="g" data-a="out">خروج</button></div></div><div class="nav"><div>${nv('home','','📚 المواد')}${nv('cards','cards','🗂 البطاقات')}${nv('quiz','quiz','✅ الاختبار')}</div></div><div class="wrap">${inner}</div><div class="credit">تصميم بواسطة <b>Loca_Tove</b> <span>✚</span></div>`;
   window.scrollTo(0,0);
 }
 function authView(){
@@ -177,7 +178,7 @@ function authView(){
   ${up?'<div class="fld"><input id="nm" placeholder="الاسم"></div>':''}
   <div class="fld"><input id="em" type="email" dir="ltr" placeholder="البريد الإلكتروني"></div>
   <div class="fld"><input id="pw" type="password" dir="ltr" placeholder="كلمة المرور (٦ أحرف على الأقل)"></div>
-  <button style="width:100%" data-a="auth">${up?'إنشاء الحساب':'دخول'}</button></div></div></div>`;
+  <button style="width:100%" data-a="auth">${up?'إنشاء الحساب':'دخول'}</button></div></div><div class="credit">تصميم بواسطة <b>Loca_Tove</b> <span>✚</span></div></div>`;
 }
 function stats(sid){
   const ls=lectures.filter(l=>l.subject_id===sid);
@@ -308,7 +309,7 @@ document.addEventListener('click',async ev=>{
     if(a==='addS'){const n=$('#sn').value.trim();if(!n)return;const {error}=await sb.from('subjects').insert({name_ar:n,icon:$('#si').value||'📚',user_id:me.id,sort_order:subjects.length});if(error)return toast(error.message);await loadAll();homeView()}
     else if(a==='addL'){const n=$('#ln').value.trim();if(!n)return;const {error}=await sb.from('lectures').insert({title_ar:n,subject_id:d.s,user_id:me.id,sort_order:lectures.filter(x=>x.subject_id===d.s).length});if(error)return toast(error.message);await loadAll();subjectView(d.s)}
     else if(a==='bulk'){
-      const fs=[...$('#bf').files].sort((x,y)=>x.name.localeCompare(y.name,'ar',{numeric:true}));
+      const fs=[...$('#bf').files].sort((x,y)=>x.name.replace(/_/g,' ').localeCompare(y.name.replace(/_/g,' '),'ar',{numeric:true}));
       if(!fs.length)return toast('اختار ملفات PDF الأول');
       const base=lectures.filter(x=>x.subject_id===d.s).length;let ok=0;
       for(let i=0;i<fs.length;i++){

@@ -9,63 +9,101 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
-:root{--bg:#f3f7f8;--card:#fff;--tx:#14262b;--mu:#667b80;--ac:#0e7c86;--ac2:#14a0a8;--bd:#dde7e9;--ok:#1f9d63;--dg:#d64545;--sh:0 6px 24px rgba(14,60,70,.07)}
-@media (prefers-color-scheme:dark){:root{--bg:#0d1719;--card:#152225;--tx:#e8f1f2;--mu:#8da4a8;--ac:#2bbfc9;--ac2:#4fd3dc;--bd:#25393d;--sh:0 6px 24px rgba(0,0,0,.35)}}
-*{box-sizing:border-box}
+:root{--bg:#eef7f8;--card:#fff;--tx:#0c2f3a;--mu:#5d7a84;--ac:#0aa5a8;--ac2:#35c2d8;--nv:#0b4f6c;--bd:#d5e8eb;--ok:#19b07a;--dg:#f0566a;--sh:0 8px 28px rgba(11,79,108,.09)}
+@media (prefers-color-scheme:dark){:root{--bg:#07181d;--card:#0e2a32;--tx:#e6f4f6;--mu:#8fb1b9;--ac:#2dd4cf;--ac2:#4fc3f7;--nv:#7dd3e8;--bd:#1b4350;--sh:0 8px 28px rgba(0,0,0,.4)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,system-ui,Tahoma,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+body{margin:0;color:var(--tx);font-family:Cairo,system-ui,Tahoma,sans-serif;min-height:100vh;padding-bottom:env(safe-area-inset-bottom);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 25v14M25 32h14' stroke='%230aa5a8' stroke-opacity='.10' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E")}
 button,input,select,textarea{font:inherit;color:inherit}
-input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--ac)}
+input,select,textarea{width:100%;background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:12px 14px;outline:none;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 18%,transparent)}
 textarea{min-height:110px;resize:vertical}
-button{border:0;border-radius:12px;padding:10px 16px;background:var(--ac);color:#fff;font-weight:700;cursor:pointer;transition:.15s}
-button:hover{filter:brightness(1.08)}
-button.s{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}
-button.d{background:none;color:var(--dg);padding:6px 10px}
-button.g{background:none;color:var(--mu);padding:6px 10px}
+button{border:0;border-radius:14px;padding:11px 18px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .2s;box-shadow:0 6px 16px color-mix(in srgb,var(--ac) 35%,transparent)}
+button:hover{transform:translateY(-2px)}button:active{transform:scale(.96)}
+button.s{background:var(--card);color:var(--tx);border:1.5px solid var(--bd);box-shadow:none}
+button.d{background:none;color:var(--dg);padding:6px 10px;box-shadow:none}
+button.g{background:none;color:var(--mu);padding:6px 10px;box-shadow:none}
 a{color:var(--ac)}
-.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--bd);padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+@keyframes fl{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(12deg)}}
+@keyframes ecg{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+@keyframes grow{from{width:0}}
+@keyframes ringin{from{stroke-dashoffset:214}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.14)}28%{transform:scale(1)}42%{transform:scale(1.1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes pop2{50%{transform:scale(1.04)}}
+@keyframes pop{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.4);opacity:0}}
+@keyframes toast{from{opacity:0;transform:translate(-50%,14px)}}
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
 .top>div{max-width:900px;margin:auto;display:flex;align-items:center;gap:10px}
-.brand{font-weight:800;font-size:20px;color:var(--ac);flex:1;cursor:pointer}
-.nav{background:var(--card);border-bottom:1px solid var(--bd)}
-.nav>div{max-width:900px;margin:auto;display:flex;padding:0 8px}
-.nav a{flex:1;text-align:center;padding:11px 4px;font-weight:700;cursor:pointer;text-decoration:none;color:var(--mu);font-size:14px}
-.nav a:hover{color:var(--ac)}
-.fc{min-height:190px;display:grid;place-items:center;text-align:center;font-size:22px;font-weight:700;padding:26px;cursor:pointer;user-select:none}
-.fc.back{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0}
-.opt{display:block;width:100%;text-align:right;background:var(--card);color:var(--tx);border:1px solid var(--bd);margin-top:10px;padding:13px 16px}
-.opt.ok{background:var(--ok);color:#fff;border-color:var(--ok)}.opt.no{background:var(--dg);color:#fff;border-color:var(--dg)}
-.wrap{max-width:900px;margin:auto;padding:18px 16px 60px}
-.hero{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border-radius:20px;padding:22px;box-shadow:var(--sh);margin-bottom:20px}
-.hero h2{margin:0 0 4px;font-size:22px}.hero p{margin:0 0 14px;opacity:.9}
-.hero .bar{background:rgba(255,255,255,.3)}.hero .bar i{background:#fff}
-.bar{height:8px;border-radius:8px;background:var(--bd);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--ok);border-radius:8px;transition:width .4s}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;box-shadow:var(--sh)}
-.sub{cursor:pointer;transition:.15s}.sub:hover{transform:translateY(-3px);border-color:var(--ac)}
-.sub .ic{font-size:32px}.sub h3{margin:8px 0 2px;font-size:17px}.sub small{color:var(--mu)}
-.sub .bar{margin-top:12px}
-h1.t{font-size:24px;margin:6px 0 16px}
-.back{background:none;color:var(--ac);padding:4px 0;margin-bottom:6px}
-.lec{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
-.lec:hover{border-color:var(--ac)}
+.brand{flex:1;display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;color:var(--nv);cursor:pointer}
+.brand svg{animation:beat 2.2s ease-in-out infinite}
+.nav{position:sticky;top:calc(58px + env(safe-area-inset-top));z-index:4;padding:10px 12px 0}
+.nav>div{max-width:900px;margin:auto;display:flex;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:5px;box-shadow:var(--sh)}
+.nav a{flex:1;text-align:center;padding:9px 4px;font-weight:700;cursor:pointer;text-decoration:none;color:var(--mu);font-size:14px;border-radius:13px;transition:.2s}
+.nav a.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 5px 14px color-mix(in srgb,var(--ac) 35%,transparent)}
+.wrap{max-width:900px;margin:auto;padding:18px 16px 70px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:18px;box-shadow:var(--sh);animation:up .5s both}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--g1,#0b4f6c),var(--g2,#0aa5a8));color:#fff;border-radius:24px;padding:24px 22px 58px;box-shadow:0 14px 34px color-mix(in srgb,var(--g2,#0aa5a8) 35%,transparent);margin-bottom:22px;animation:up .5s both}
+.hero h1,.hero h2{margin:0 0 4px;font-size:22px}.hero p{margin:0;opacity:.92}
+.hi{display:flex;align-items:center;gap:14px;justify-content:space-between;position:relative;z-index:1}
+.fl{position:absolute;opacity:.22;font-size:22px;animation:fl 6s ease-in-out infinite;pointer-events:none}
+.ecg{position:absolute;left:0;right:0;bottom:6px;width:100%;height:54px}
+.ecg path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.ecg .e0{stroke:rgba(255,255,255,.3);stroke-width:2}
+.ecg .e1{stroke:#fff;stroke-width:3.5;stroke-dasharray:16 84;animation:ecg 2.4s linear infinite}
+.ring{width:84px;height:84px;flex:none;transform:rotate(-90deg)}
+.ring .rb{fill:none;stroke:rgba(255,255,255,.25);stroke-width:8}
+.ring .rf{fill:none;stroke:#fff;stroke-width:8;stroke-linecap:round;stroke-dasharray:214;animation:ringin 1.3s ease-out}
+.ring text{fill:#fff;font-weight:800;font-size:18px}
+.bar{height:9px;border-radius:9px;background:color-mix(in srgb,var(--bd) 80%,transparent);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--g1,var(--ok)),var(--g2,#5fdca9));animation:grow 1s ease-out}
+.hero .bar{background:rgba(255,255,255,.28);margin-top:14px}.hero .bar i{background:#fff}
+h1.t{font-size:22px;margin:4px 0 14px;color:var(--nv)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.sub{position:relative;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s}
+.sub::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,var(--g1),var(--g2))}
+.sub:hover{transform:translateY(-6px) scale(1.015);box-shadow:0 18px 38px color-mix(in srgb,var(--g2) 30%,transparent)}
+.sub .ic{width:54px;height:54px;border-radius:17px;display:grid;place-items:center;font-size:27px;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 8px 18px color-mix(in srgb,var(--g2) 40%,transparent);transition:transform .3s}
+.sub:hover .ic{transform:rotate(-8deg) scale(1.1)}
+.sub h3{margin:12px 0 2px;font-size:16px}.sub small{color:var(--mu)}
+.sub .bar{margin-top:12px}.sub .pc{position:absolute;top:16px;left:16px;font-size:13px;color:var(--mu)}
+.back{background:none;color:var(--ac);padding:4px 0;margin-bottom:8px;box-shadow:none}
+.lec{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.2s;border-right:4px solid transparent}
+.lec:hover{transform:translateX(-5px);border-right-color:var(--ac)}
 .lec .n{flex:1;font-weight:600}
-.chk{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);display:grid;place-items:center;flex:none;color:#fff;font-size:14px}
-.chk.on{background:var(--ok);border-color:var(--ok)}
-.lk{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.chk{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--bd);display:grid;place-items:center;flex:none;color:#fff;font-size:15px;transition:.3s}
+.chk.on{background:linear-gradient(135deg,var(--ok),#5fdca9);border-color:transparent;transform:scale(1.08)}
+.lk{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--bd)}
 .lk:last-child{border:0}.lk a{flex:1;text-decoration:none;font-weight:600;overflow-wrap:anywhere}
-.sec{margin:22px 0 8px;font-weight:800;font-size:16px}
+.sec{margin:24px 0 10px;font-weight:800;font-size:16px;color:var(--nv)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.row>*{flex:1;min-width:130px}.row>button{flex:none}
-.adm{border:1px dashed var(--ac);background:transparent;box-shadow:none;margin-top:14px}
+.adm{border:2px dashed color-mix(in srgb,var(--ac) 55%,transparent);background:transparent;box-shadow:none;margin-top:16px}
 .adm b{color:var(--ac)}
-.auth{max-width:420px;margin:8vh auto;padding:0 16px}
-.auth .card{padding:26px}.auth h1{margin:0 0 4px;color:var(--ac);font-size:28px}
-.tabs{display:flex;gap:6px;margin:16px 0}.tabs button{flex:1}
+.auth{max-width:430px;margin:5vh auto;padding:0 16px}
+.auth .card{padding:0;overflow:hidden}
+.ban{position:relative;overflow:hidden;background:linear-gradient(135deg,#0b4f6c,#0aa5a8);color:#fff;text-align:center;padding:30px 20px 70px}
+.ban h1{margin:10px 0 2px;font-size:30px}.ban p{margin:0;opacity:.9;font-size:14px}
+.ban svg.lg{animation:beat 2s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25))}
+.fbody{padding:20px 22px 24px}
+.tabs{display:flex;gap:6px;margin:0 0 16px}.tabs button{flex:1}
 .fld{margin-bottom:12px}
-.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 18px;border-radius:12px;z-index:20;max-width:90vw}
-.empty{text-align:center;color:var(--mu);padding:30px 0}
-.badge{font-size:12px;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:2px 10px;color:var(--mu)}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--nv);color:#fff;padding:12px 20px;border-radius:14px;z-index:20;max-width:90vw;animation:toast .3s;box-shadow:var(--sh)}
+.empty{text-align:center;color:var(--mu);padding:34px 0}
+.badge{font-size:12px;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:3px 11px;color:var(--mu)}
+.scene{perspective:1100px;margin-bottom:14px}
+.flip{position:relative;height:240px;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.4,.2,.2,1);cursor:pointer}
+.flip.on{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:26px;font-size:22px;font-weight:800;box-shadow:var(--sh)}
+.face small{font-size:12px;font-weight:600;opacity:.65}
+.face.f{background:var(--card);border:1.5px solid var(--bd)}
+.face.b{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;transform:rotateY(180deg)}
+.opt{display:block;width:100%;text-align:right;background:var(--card);color:var(--tx);border:1.5px solid var(--bd);margin-top:10px;padding:14px 16px;box-shadow:none}
+.opt:hover{border-color:var(--ac)}
+.opt.ok{background:linear-gradient(135deg,var(--ok),#5fdca9);color:#fff;border-color:transparent;animation:pop2 .4s}
+.opt.no{background:linear-gradient(135deg,var(--dg),#ff8fa0);color:#fff;border-color:transparent;animation:shake .4s}
+.cf{position:fixed;left:50%;top:38%;width:10px;height:10px;border-radius:3px;animation:pop .95s ease-out forwards;pointer-events:none;z-index:30}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -112,18 +150,34 @@ function route(){
   if(h[0]==='quiz')return quizView();
   homeView();
 }
+
+const PAL=[['#0b8f93','#35c2d8'],['#2f6fed','#6fb1ff'],['#e8455f','#ff8fa0'],['#7b5bd6','#b79cf0'],['#12a672','#5fdca9'],['#f08a24','#ffc371']];
+const pal=i=>{const c=PAL[((i%PAL.length)+PAL.length)%PAL.length];return `--g1:${c[0]};--g2:${c[1]}`};
+const logo=n=>`<svg class="lg" width="${n}" height="${n}" viewBox="0 0 40 40"><defs><linearGradient id="lgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0aa5a8"/><stop offset="1" stop-color="#35c2d8"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="url(#lgg)"/><path d="M6 22h8l3-8 5 15 3-7h9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ECGD='M0 40H70l8-6 8 6h12l8-28 10 60 8-32h14l8-9 8 9H400';
+const ecg=()=>`<svg class="ecg" viewBox="0 0 400 80" preserveAspectRatio="none"><path class="e0" pathLength="100" d="${ECGD}"/><path class="e1" pathLength="100" d="${ECGD}"/></svg>`;
+const ring=p=>`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" class="rb"/><circle cx="42" cy="42" r="34" class="rf" style="stroke-dashoffset:${(214*(1-p/100)).toFixed(1)}"/><text x="42" y="48" text-anchor="middle" transform="rotate(90 42 42)">${p}%</text></svg>`;
+function burst(){
+  const cols=['#0aa5a8','#35c2d8','#19b07a','#f0566a','#ffb648','#7b5bd6'];
+  for(let i=0;i<30;i++){const d=document.createElement('div');d.className='cf';const a=Math.random()*6.28,r=90+Math.random()*150;
+    d.style.cssText=`background:${cols[i%6]};--dx:${Math.cos(a)*r}px;--dy:${Math.sin(a)*r-40}px;--r:${Math.random()*540}deg;${i%3?'':'border-radius:50%'}`;
+    document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}
+}
 function shell(inner){
-  $('#app').innerHTML=`<div class="top"><div><span class="brand" data-a="home">📚 مذاكرتي</span><span class="badge">${e(prof?.display_name||'')}${isAdmin()?' · مشرف':''}</span><button class="g" data-a="out">خروج</button></div></div><div class="nav"><div><a data-a="open" data-h="">📚 المواد</a><a data-a="open" data-h="cards">🗂 البطاقات</a><a data-a="open" data-h="quiz">✅ الاختبار</a></div></div><div class="wrap">${inner}</div>`;
+  const r=location.hash.replace('#/','').split('/')[0];
+  const t=r==='cards'?'cards':r==='quiz'?'quiz':'home';
+  const nv=(k,h,l)=>`<a class="${t===k?'on':''}" data-a="open" data-h="${h}">${l}</a>`;
+  $('#app').innerHTML=`<div class="top"><div><span class="brand" data-a="home">${logo(34)}<span>مذاكرتي</span></span><span class="badge">${e(prof?.display_name||'')}${isAdmin()?' · مشرف':''}</span><button class="g" data-a="out">خروج</button></div></div><div class="nav"><div>${nv('home','','📚 المواد')}${nv('cards','cards','🗂 البطاقات')}${nv('quiz','quiz','✅ الاختبار')}</div></div><div class="wrap">${inner}</div>`;
   window.scrollTo(0,0);
 }
 function authView(){
   const up=authMode==='up';
-  $('#app').innerHTML=`<div class="auth"><div class="card"><h1>📚 مذاكرتي</h1><div style="color:var(--mu)">منصة مذاكرة طلبة التمريض: كل مادة بمحاضراتها في مكان واحد</div>
-  <div class="tabs"><button class="${up?'s':''}" data-a="mode" data-m="in">تسجيل دخول</button><button class="${up?'':'s'}" data-a="mode" data-m="up">حساب جديد</button></div>
+  $('#app').innerHTML=`<div class="auth"><div class="card"><div class="ban"><span class="fl" style="right:12%;top:18%">✚</span><span class="fl" style="right:80%;top:30%;animation-delay:-2s;font-size:15px">✚</span><span class="fl" style="right:70%;top:12%;animation-delay:-4s">💊</span>${logo(60)}<h1>مذاكرتي</h1><p>كل مادة بمحاضراتها في مكان واحد</p>${ecg()}</div>
+  <div class="fbody"><div class="tabs"><button class="${up?'s':''}" data-a="mode" data-m="in">تسجيل دخول</button><button class="${up?'':'s'}" data-a="mode" data-m="up">حساب جديد</button></div>
   ${up?'<div class="fld"><input id="nm" placeholder="الاسم"></div>':''}
   <div class="fld"><input id="em" type="email" dir="ltr" placeholder="البريد الإلكتروني"></div>
   <div class="fld"><input id="pw" type="password" dir="ltr" placeholder="كلمة المرور (٦ أحرف على الأقل)"></div>
-  <button style="width:100%" data-a="auth">${up?'إنشاء الحساب':'دخول'}</button></div></div>`;
+  <button style="width:100%" data-a="auth">${up?'إنشاء الحساب':'دخول'}</button></div></div></div>`;
 }
 function stats(sid){
   const ls=lectures.filter(l=>l.subject_id===sid);
@@ -132,19 +186,19 @@ function stats(sid){
 }
 function homeView(){
   const t=lectures.length,d=lectures.filter(l=>prog[l.id]?.done).length,p=t?Math.round(d/t*100):0;
-  let h=`<div class="hero"><h2>أهلاً ${e(prof?.display_name||'')} 👋</h2><p>${t?`خلّصت ${d} من ${t} محاضرة`:'لسه مفيش محاضرات مضافة'}</p><div class="bar"><i style="width:${p}%"></i></div></div><h1 class="t">المواد</h1>`;
-  if(!subjects.length)h+='<div class="empty">لسه مفيش مواد.</div>';
-  h+='<div class="grid">'+subjects.map(s=>{const k=stats(s.id);return `<div class="card sub" data-a="open" data-h="s/${s.id}"><div class="ic">${e(s.icon||'📚')}</div><h3>${e(s.name_ar)}</h3><small>${k.d}/${k.t} محاضرة · ${k.p}%</small><div class="bar"><i style="width:${k.p}%"></i></div></div>`}).join('')+'</div>';
+  let h=`<div class="hero"><span class="fl" style="right:46%;top:12%">✚</span><span class="fl" style="right:72%;top:52%;animation-delay:-2s;font-size:15px">✚</span><span class="fl" style="right:32%;top:58%;animation-delay:-4s">💊</span><div class="hi"><div><h2>أهلاً ${e(prof?.display_name||'')} 👋</h2><p>${t?`خلّصت ${d} من ${t} محاضرة. كل محاضرة بتقرّبك من هدفك 💪`:'ابدأ بإضافة موادك ومحاضراتك'}</p></div>${ring(p)}</div>${ecg()}</div><h1 class="t">المواد</h1>`;
+  if(!subjects.length)h+='<div class="empty">🩺<br>لسه مفيش مواد.</div>';
+  h+='<div class="grid">'+subjects.map((s,i)=>{const k=stats(s.id);return `<div class="card sub" style="${pal(i)};animation-delay:${i*70}ms" data-a="open" data-h="s/${s.id}"><div class="ic">${e(s.icon||'📚')}</div><h3>${e(s.name_ar)}</h3><small>${k.t} محاضرة · أنجزت ${k.d}</small><div class="bar"><i style="width:${k.p}%"></i></div><b class="pc">${k.p}%</b></div>`}).join('')+'</div>';
   if(isAdmin())h+=`<div class="card adm"><b>إضافة مادة</b><div class="row"><input id="sn" placeholder="اسم المادة"><input id="si" placeholder="أيقونة" value="🩺" style="max-width:90px;min-width:70px"><button data-a="addS">إضافة</button></div></div>`;
   shell(h);
 }
 function subjectView(id){
   const s=subjects.find(x=>x.id===id);if(!s)return go('');
-  const ls=lectures.filter(l=>l.subject_id===id),k=stats(id);
-  let h=`<button class="back" data-a="home">← كل المواد</button><h1 class="t">${e(s.icon||'')} ${e(s.name_ar)}</h1><div class="bar" style="margin-bottom:18px"><i style="width:${k.p}%"></i></div>`;
+  const ls=lectures.filter(l=>l.subject_id===id),k=stats(id),ix=subjects.findIndex(x=>x.id===id);
+  let h=`<button class="back" data-a="home">← كل المواد</button><div class="hero" style="${pal(ix)}"><span class="fl" style="right:60%;top:14%">✚</span><div class="hi"><div><h1>${e(s.icon||'')} ${e(s.name_ar)}</h1><p>${k.d} من ${k.t} محاضرة</p></div>${ring(k.p)}</div>${ecg()}</div>`;
   if(!ls.length)h+='<div class="empty">لسه مفيش محاضرات في المادة دي.</div>';
-  h+=ls.map((l,i)=>`<div class="card lec" data-a="open" data-h="l/${l.id}"><div class="chk ${prog[l.id]?.done?'on':''}">${prog[l.id]?.done?'✓':''}</div><div class="n">${i+1}. ${e(l.title_ar)}</div><span class="g">‹</span></div>`).join('');
-  if(isAdmin())h+=`<div class="card adm"><b>إضافة محاضرة</b><div class="row"><input id="ln" placeholder="عنوان المحاضرة"><button data-a="addL" data-s="${id}">إضافة</button></div><div class="row"><button class="d" data-a="delS" data-s="${id}">حذف المادة</button></div></div>`;
+  h+=ls.map((l,i)=>`<div class="card lec" style="animation-delay:${i*50}ms" data-a="open" data-h="l/${l.id}"><div class="chk ${prog[l.id]?.done?'on':''}">${prog[l.id]?.done?'✓':''}</div><div class="n">${i+1}. ${e(l.title_ar)}</div><span class="g">‹</span></div>`).join('');
+  if(isAdmin())h+=`<div class="card adm"><b>إضافة محاضرة</b><div class="row"><input id="ln" placeholder="عنوان المحاضرة"><button data-a="addL" data-s="${id}">إضافة</button></div><div class="row"><input id="bf" type="file" accept="application/pdf,.pdf" multiple><button data-a="bulk" data-s="${id}">رفع PDF دفعة واحدة</button></div><div class="hint" style="color:var(--mu);font-size:12px;margin-top:6px">كل ملف بيتحوّل لمحاضرة باسم الملف، بترتيب الأسماء.</div><div class="row"><button class="d" data-a="delS" data-s="${id}">حذف المادة</button></div></div>`;
   shell(h);
 }
 async function lectureView(id){
@@ -169,10 +223,10 @@ async function lectureView(id){
 
 function cardsView(){
   let h='<h1 class="t">بطاقات المراجعة</h1>';
-  if(!cards.length)h+='<div class="empty">لسه مفيش بطاقات. أضف أول بطاقة من تحت.</div>';
+  if(!cards.length)h+='<div class="empty">🗂<br>لسه مفيش بطاقات. أضف أول بطاقة من تحت.</div>';
   else{
     if(ci>=cards.length)ci=0;const c=cards[ci];
-    h+=`<div class="card fc ${flip?'back':''}" data-a="flip">${e(flip?c.back_ar:c.front_ar)}</div>
+    h+=`<div class="scene"><div class="flip ${flip?'on':''}" data-a="flip"><div class="face f"><small>السؤال · اضغط للقلب</small>${e(c.front_ar)}</div><div class="face b"><small>الإجابة</small>${e(c.back_ar)}</div></div></div>
     <div class="row" style="justify-content:center"><button class="s" data-a="cprev">السابقة</button><span class="badge" style="align-self:center;flex:none;min-width:0">${ci+1} / ${cards.length}</span><button class="s" data-a="cnext">التالية</button></div>
     <div class="row"><button class="d" data-a="delC" data-id="${c.id}">حذف البطاقة دي</button></div>`;
   }
@@ -183,7 +237,7 @@ function quizView(){
   let h='<h1 class="t">اختبر نفسك</h1>';
   if(quiz&&quiz.i<quiz.o.length){
     const q=qs[quiz.o[quiz.i]],opts=q.options_ar||[];
-    h+=`<div class="badge">سؤال ${quiz.i+1} من ${quiz.o.length}</div><div class="card" style="margin-top:10px;font-size:18px;font-weight:700">${e(q.question_ar)}</div>`;
+    h+=`<div class="bar" style="margin-bottom:12px"><i style="width:${quiz.i/quiz.o.length*100}%"></i></div><div class="badge">سؤال ${quiz.i+1} من ${quiz.o.length}</div><div class="card" style="margin-top:10px;font-size:18px;font-weight:700">${e(q.question_ar)}</div>`;
     opts.forEach((o,i)=>{
       let c='';if(quiz.a!==null){if(i===q.answer_index)c='ok';else if(i===quiz.a)c='no'}
       h+=`<button class="opt ${c}" data-a="pick" data-i="${i}">${e(o)}</button>`;
@@ -191,9 +245,9 @@ function quizView(){
     if(quiz.a!==null)h+=`<div class="row"><button data-a="qnext">${quiz.i+1<quiz.o.length?'السؤال التالي':'عرض النتيجة'}</button></div>`;
   }else if(quiz){
     const p=Math.round(quiz.s/quiz.o.length*100);
-    h+=`<div class="hero"><h2>النتيجة: ${quiz.s} من ${quiz.o.length}</h2><p>${p>=80?'ممتاز 👏':p>=50?'كويس، كمّل مراجعة 💪':'محتاج مراجعة أكتر، وإنت قدها 🌱'}</p></div><div class="row"><button data-a="qstart">إعادة الاختبار</button><button class="s" data-a="qstop">رجوع</button></div>`;
+    h+=`<div class="hero"><div class="hi"><div><h2>النتيجة: ${quiz.s} من ${quiz.o.length}</h2><p>${p>=80?'ممتاز 👏':p>=50?'نتيجة كويسة والمراجعة هتفرق 💪':'المراجعة هتفرق معاك، جرّب تاني 🌱'}</p></div>${ring(p)}</div>${ecg()}</div><div class="row"><button data-a="qstart">إعادة الاختبار</button><button class="s" data-a="qstop">رجوع</button></div>`;
   }else{
-    h+=qs.length?`<div class="card"><p>عندك ${qs.length} سؤال.</p><button data-a="qstart">ابدأ الاختبار</button></div>`:'<div class="empty">لسه مفيش أسئلة. أضف أسئلتك من تحت.</div>';
+    h+=qs.length?`<div class="card"><p style="margin-top:0">عندك ${qs.length} سؤال.</p><button data-a="qstart">ابدأ الاختبار</button></div>`:'<div class="empty">✅<br>لسه مفيش أسئلة. أضف أسئلتك من تحت.</div>';
     h+=`<div class="sec">أسئلتي</div>`+qs.map(q=>`<div class="card lec" style="cursor:default"><div class="n">${e(q.question_ar)}</div><button class="d" data-a="delQ" data-id="${q.id}">✕</button></div>`).join('');
     h+=`<div class="card adm"><b>إضافة سؤال</b><div class="row"><input id="qq" placeholder="نص السؤال"></div>
     <div class="row"><input class="qo" placeholder="الاختيار ١"><input class="qo" placeholder="الاختيار ٢"></div><div class="row"><input class="qo" placeholder="الاختيار ٣"><input class="qo" placeholder="الاختيار ٤"></div>
@@ -231,7 +285,7 @@ document.addEventListener('click',async ev=>{
     }
     await loadAll();go('');route();
   }
-  else if(a==='flip'){flip=!flip;cardsView()}
+  else if(a==='flip'){flip=!flip;$('.flip').classList.toggle('on',flip)}
   else if(a==='cnext'){ci=(ci+1)%cards.length;flip=false;cardsView()}
   else if(a==='cprev'){ci=(ci-1+cards.length)%cards.length;flip=false;cardsView()}
   else if(a==='addC'){const f=$('#cf').value.trim(),bk=$('#cb').value.trim();if(!f||!bk)return toast('اكتب السؤال والإجابة');const {error}=await sb.from('flashcards').insert({user_id:me.id,front_ar:f,back_ar:bk});if(error)return toast(error.message);await loadAll();ci=cards.length-1;flip=false;cardsView()}
@@ -245,14 +299,30 @@ document.addEventListener('click',async ev=>{
   else if(a==='delQ'){if(!confirm('حذف السؤال؟'))return;await sb.from('questions').delete().eq('id',d.id);await loadAll();quizView()}
   else if(a==='qstart'){const o=qs.map((_,i)=>i).sort(()=>Math.random()-.5);quiz={o,i:0,s:0,a:null};quizView()}
   else if(a==='pick'){if(quiz.a!==null)return;quiz.a=+d.i;if(quiz.a===qs[quiz.o[quiz.i]].answer_index)quiz.s++;quizView()}
-  else if(a==='qnext'){quiz.i++;quiz.a=null;quizView()}
+  else if(a==='qnext'){quiz.i++;quiz.a=null;quizView();if(quiz.i>=quiz.o.length&&quiz.s/quiz.o.length>=.8)burst()}
   else if(a==='qstop'){quiz=null;quizView()}
-  else if(a==='done'){const ok=await saveProg(d.l,{done:!(prog[d.l]?.done)});if(ok)lectureView(d.l)}
+  else if(a==='done'){const ok=await saveProg(d.l,{done:!(prog[d.l]?.done)});if(ok){await lectureView(d.l);if(prog[d.l].done)burst()}}
   else if(a==='note'){if(await saveProg(d.l,{note:$('#note').value}))toast('تم الحفظ ✓')}
   else if(a==='file'){const {data,error}=await sb.storage.from('lecture-files').createSignedUrl(d.p,300);if(error)return toast('تعذّر فتح الملف');window.open(data.signedUrl,'_blank')}
   else if(isAdmin()){
     if(a==='addS'){const n=$('#sn').value.trim();if(!n)return;const {error}=await sb.from('subjects').insert({name_ar:n,icon:$('#si').value||'📚',user_id:me.id,sort_order:subjects.length});if(error)return toast(error.message);await loadAll();homeView()}
     else if(a==='addL'){const n=$('#ln').value.trim();if(!n)return;const {error}=await sb.from('lectures').insert({title_ar:n,subject_id:d.s,user_id:me.id,sort_order:lectures.filter(x=>x.subject_id===d.s).length});if(error)return toast(error.message);await loadAll();subjectView(d.s)}
+    else if(a==='bulk'){
+      const fs=[...$('#bf').files].sort((x,y)=>x.name.localeCompare(y.name,'ar',{numeric:true}));
+      if(!fs.length)return toast('اختار ملفات PDF الأول');
+      const base=lectures.filter(x=>x.subject_id===d.s).length;let ok=0;
+      for(let i=0;i<fs.length;i++){
+        const f=fs[i];toast(`جاري رفع ${i+1} من ${fs.length}...`);
+        const title=f.name.replace(/\.pdf$/i,'').replace(/[_]+/g,' ').trim()||('محاضرة '+(base+i+1));
+        const {data:row,error:e1}=await sb.from('lectures').insert({title_ar:title,subject_id:d.s,user_id:me.id,sort_order:base+i}).select('id').single();
+        if(e1||!row){toast('فشل إنشاء: '+title);continue}
+        const path=`${row.id}/${Date.now()}.pdf`;
+        const {error:e2}=await sb.storage.from('lecture-files').upload(path,f,{contentType:'application/pdf'});
+        if(e2){toast('فشل رفع: '+title+' ('+e2.message+')');continue}
+        await sb.from('lectures').update({file_path:path,file_name:f.name}).eq('id',row.id);ok++;
+      }
+      await loadAll();subjectView(d.s);toast(`تم رفع ${ok} من ${fs.length} محاضرة ✓`);
+    }
     else if(a==='addK'){const u=$('#lu').value;if(!u.trim())return;const {error}=await sb.from('lecture_links').insert({lecture_id:d.l,kind:$('#lk').value,title:$('#lt').value.trim(),url:fixUrl(u)});if(error)return toast(error.message);lectureView(d.l)}
     else if(a==='delK'){if(!confirm('حذف الرابط؟'))return;await sb.from('lecture_links').delete().eq('id',d.k);lectureView(d.l)}
     else if(a==='up'){
